@@ -11,7 +11,14 @@ class ScreenOne extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('/images/d.png'),
+          Container(
+            height: 200,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(2)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset('assets/images/d.png'),
+            ),
+          ),
           const Text(
             'Welcome to ... GAS!!',
             style: TextStyle(

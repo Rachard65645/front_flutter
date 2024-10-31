@@ -106,7 +106,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ? const SizedBox(
                           width: 10,
                         )
-                      : GapH(30),
+                      : const GapH(30),
                   currentPage != 2
                       ? const SizedBox(
                           width: 10,
@@ -119,7 +119,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                  builder: (context) => LoginScreen()),
+                                  builder: (context) => const LoginScreen()),
                               (router) => false,
                             );
                           },

@@ -1,12 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gas/application_screen.dart';
 import 'package:gas/auth/business_logic/login_bloc/login_bloc.dart';
 import 'package:gas/auth/presentation/pages/login_screen.dart';
 import 'package:gas/onboarding/presentation/pages/onboarding_screen.dart';
-import 'package:gas/products/business_logic/bloc/products_bloc.dart';
-import 'package:gas/service_locator.dart';
 
 class AppInitScreen extends StatefulWidget {
   const AppInitScreen({super.key});
@@ -19,7 +16,11 @@ class _AppInitScreenState extends State<AppInitScreen> {
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration(seconds: 5), () {
+      print('object');
+    });
     context.read<LoginBloc>().add(CheckAuthStateEvent());
+    super.initState();
   }
 
   @override
@@ -30,15 +31,12 @@ class _AppInitScreenState extends State<AppInitScreen> {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const OnboardingScreen()),
               (router) => false);
-        }
-        if (state is CheckAuthStateSuccess) {
-          getIt<ProductsBloc>().add(FetchProductEven());
+        } else if (state is CheckAuthStateSuccess) {
           Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const ApplicationScreen()),
+            MaterialPageRoute(builder: (context) => const AppInitScreen()),
             (router) => false,
           );
-        }
-        if (state is CheckAuthStateFailure) {
+        } else if (state is CheckAuthStateFailure) {
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const LoginScreen()),
             (router) => false,

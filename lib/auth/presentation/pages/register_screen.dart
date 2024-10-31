@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gas/auth/presentation/pages/login_screen.dart';
-import '../../../application_screen.dart';
-import '../../../products/business_logic/bloc/products_bloc.dart';
-import '../../../service_locator.dart';
 import '../../business_logic/register_bloc/register_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -53,17 +50,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       backgroundColor: Colors.white,
       body: BlocConsumer<RegisterBloc, RegisterState>(
         listener: (context, state) {
-          if (state is RegisterLoading) {}
-          if (state is RegisterFailure) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.message)));
-          }
           if (state is RegisterSuccess) {
-            getIt.get<ProductsBloc>().add(FetchProductEven());
             Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (context) => const ApplicationScreen()),
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
               (router) => false,
+            );
+          } else if (state is RegisterFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
             );
           }
         },
@@ -97,7 +91,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ]),
                           decoration: const InputDecoration(
                               label: Row(
-                                children: [Icon(Icons.person), Text('Name')],
+                                children: [Text('Name')],
                               ),
                               hintText: 'Name',
                               border: OutlineInputBorder(
@@ -114,7 +108,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ]),
                           decoration: const InputDecoration(
                               label: Row(
-                                children: [Icon(Icons.email), Text('Email')],
+                                children: [Text('Email')],
                               ),
                               hintText: 'Email',
                               border: OutlineInputBorder(
@@ -140,7 +134,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     ? Icons.visibility_off
                                     : Icons.visibility)),
                             label: const Row(
-                              children: [Icon(Icons.lock), Text('Password')],
+                              children: [Text('Password')],
                             ),
                             hintText: 'Password',
                             border: const OutlineInputBorder(
@@ -159,7 +153,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ]),
                           decoration: const InputDecoration(
                               label: Row(
-                                children: [Icon(Icons.phone), Text('Phone')],
+                                children: [Text('Phone')],
                               ),
                               hintText: 'Phone',
                               border: OutlineInputBorder(
@@ -176,10 +170,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ]),
                           decoration: const InputDecoration(
                               label: Row(
-                                children: [
-                                  Icon(Icons.location_city),
-                                  Text('City')
-                                ],
+                                children: [Text('City')],
                               ),
                               hintText: 'City',
                               border: OutlineInputBorder(
@@ -222,7 +213,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.orange,
+                                  backgroundColor: Colors.green,
                                   minimumSize: const Size(750, 50)),
                               child: const Text(
                                 'Sing up',
@@ -244,7 +235,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             TextButton(
                                 onPressed: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (contex) => LoginScreen()));
+                                      builder: (contex) =>
+                                          const LoginScreen()));
                                 },
                                 child: const Text('Login now',
                                     style: TextStyle(
@@ -299,7 +291,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       style: ElevatedButton.styleFrom(
                           minimumSize: const Size(10, 50),
                           backgroundColor: Colors.white,
-                          side: BorderSide()),
+                          side: const BorderSide()),
                       child: const Row(
                         children: [
                           FaIcon(

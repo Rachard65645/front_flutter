@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:gas/application_screen.dart';
 import 'package:gas/auth/business_logic/login_bloc/login_bloc.dart';
 import 'package:gas/auth/presentation/pages/register_screen.dart';
-import 'package:gas/products/business_logic/bloc/products_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gas/service_locator.dart';
+import 'package:gas/vendor/sellers/presentation/fetch_seller_creen.dart';
+import 'package:gas/vendor/sellers/business_logique/bloc/sellers_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,9 +23,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
+    super.initState();
     emailController = TextEditingController();
     passwordController = TextEditingController();
-    super.initState();
   }
 
   @override
@@ -41,18 +41,17 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.white,
       body: BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) {
+          getIt.get<SellersBloc>().add(GetSellerEvent());
+          if (state is LoginSuccess) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const FetchSellerCreen()),
+              (router) => false,
+            );
+          }
+
           if (state is LoginFailure) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(state.message)));
-          }
-
-          if (state is LoginSuccess) {
-            getIt.get<ProductsBloc>().add(FetchProductEven());
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (context) => const ApplicationScreen()),
-              (router) => false,
-            );
           }
         },
         builder: (context, state) {
@@ -66,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       BoxDecoration(borderRadius: BorderRadius.circular(2)),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: Image.asset('/images/login_screen.png'),
+                    child: Image.asset('assets/images/login_screen.png'),
                   ),
                 ),
                 Form(
@@ -81,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ]),
                         decoration: const InputDecoration(
                             label: Row(
-                              children: [Icon(Icons.person), Text('Email')],
+                              children: [Text('Email')],
                             ),
                             hintText: 'email',
                             border: OutlineInputBorder(
@@ -107,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ? Icons.visibility_off
                                   : Icons.visibility)),
                           label: const Row(
-                            children: [Icon(Icons.lock), Text('Password')],
+                            children: [Text('Password')],
                           ),
                           hintText: 'password',
                           border: const OutlineInputBorder(
@@ -134,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange,
+                              backgroundColor: Colors.green,
                               minimumSize: const Size(750, 40)),
                           child: const Text(
                             'Login',
@@ -209,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: ElevatedButton.styleFrom(
                                 minimumSize: const Size(10, 50),
                                 backgroundColor: Colors.white,
-                                side: BorderSide()),
+                                side: const BorderSide()),
                             child: const Row(
                               children: [
                                 FaIcon(

@@ -21,6 +21,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
     });
 
+    
     on<CheckAuthStateEvent>((event, emit) async {
       try {
         final SharedPreferences preferences =

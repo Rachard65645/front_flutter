@@ -23,6 +23,6 @@ class RegisterRepository {
       address: address,
     );
 
-    return UserModel.fromJsom(data);
+    return UserModel.fromJson(data);
   }
 }

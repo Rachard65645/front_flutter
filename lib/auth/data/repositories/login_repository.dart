@@ -12,15 +12,16 @@ class LoginRepository {
     required String password,
   }) async {
     var data = await service.login(email: email, password: password);
+
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.setString('token', data['token']);
     await preferences.setString('refreshToken', data['refreshToken']);
 
-    return UserModel.fromJsom(data);
+    return UserModel.fromJson(data);
   }
 
   Future<dynamic> currentUser() async {
     var data = await service.currentUser();
-    return UserModel.fromJsom(data);
+    return UserModel.fromJson(data);
   }
 }
