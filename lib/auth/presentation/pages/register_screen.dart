@@ -1,10 +1,14 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gas/auth/presentation/pages/login_screen.dart';
+import 'package:gas/router/app_router.gr.dart';
 import '../../business_logic/register_bloc/register_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+@RoutePage()
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -16,8 +20,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscureText = true;
   late TextEditingController nameController;
   late TextEditingController emailController;
-  late TextEditingController cityController;
-  late TextEditingController addressController;
   late TextEditingController phoneController;
   late TextEditingController passwordController;
   final _formkey = GlobalKey<FormState>();
@@ -25,8 +27,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void initState() {
     nameController = TextEditingController();
-    cityController = TextEditingController();
-    addressController = TextEditingController();
     phoneController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
@@ -36,8 +36,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void dispose() {
     nameController.dispose();
-    cityController.dispose();
-    addressController.dispose();
     phoneController.dispose();
     emailController.dispose();
     passwordController.dispose();
@@ -163,37 +161,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        TextFormField(
-                          controller: cityController,
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(),
-                          ]),
-                          decoration: const InputDecoration(
-                              label: Row(
-                                children: [Text('City')],
-                              ),
-                              hintText: 'City',
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)))),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          controller: addressController,
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(),
-                          ]),
-                          decoration: const InputDecoration(
-                              label: Row(
-                                children: [Text('Address')],
-                              ),
-                              hintText: 'Address',
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)))),
-                        ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -208,8 +175,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           email: emailController.text,
                                           password: passwordController.text,
                                           phone: phoneController.text,
-                                          city: cityController.text,
-                                          address: addressController.text));
+                                         ));
                                 }
                               },
                               style: ElevatedButton.styleFrom(
@@ -234,9 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (contex) =>
-                                          const LoginScreen()));
+                                  context.router.push(const  LoginRoute());
                                 },
                                 child: const Text('Login now',
                                     style: TextStyle(

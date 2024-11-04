@@ -8,15 +8,12 @@ class RegisterAuthEvent extends RegisterEvent {
   final String email;
   final String password;
   final String phone;
-  final String city;
-  final String address;
+
 
   RegisterAuthEvent(
       {required this.name,
       required this.email,
       required this.password,
-      required this.phone,
-      required this.city,
-      required this.address,
+      required this.phone
       });
 }

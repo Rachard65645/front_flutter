@@ -3,4 +3,4 @@ part of 'stations_bloc.dart';
 @immutable
 sealed class StationsEvent {}
 
-final class GetStationEvent extends StationsEvent{}
+final class GetStationsEvent extends StationsEvent{}

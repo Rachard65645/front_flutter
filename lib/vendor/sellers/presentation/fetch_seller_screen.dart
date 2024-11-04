@@ -1,12 +1,16 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gas/router/app_router.gr.dart';
+import 'package:gas/service_locator.dart';
 import 'package:gas/vendor/seller/business_logique/bloc/seller_bloc.dart';
-import 'package:gas/vendor/seller/presentation/show_seller_screen.dart';
 import 'package:gas/vendor/sellers/business_logique/bloc/sellers_bloc.dart';
 
-class FetchSellerCreen extends StatelessWidget {
-  const FetchSellerCreen({super.key});
+@RoutePage()
+class FetchSellersCreen extends StatelessWidget {
+  const FetchSellersCreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,26 +50,26 @@ class FetchSellerCreen extends StatelessWidget {
                 rows: state.sellers!.map<DataRow>((seller) {
                   return DataRow(
                     cells: <DataCell>[
-                      DataCell(Text(seller.users.name)),
+                      DataCell(Text(seller.users!.name)),
                       DataCell(ElevatedButton(
                         onPressed: () {
-                          context
-                              .read<SellerBloc>()
+                          getIt
+                              .get<SellerBloc>()
                               .add(GetSellerByIdEvent(id: seller.id));
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => const ShowSellerScreen()),
-                          );
+                          context.router.push(const ShowSellerRoute());
                         },
                         child: const Text('show'),
                       )),
                       DataCell(ElevatedButton(
                         onPressed: () {
-                          context
-                              .read<SellerBloc>()
-                              .add(RefuseSellerEvent(id: seller.id));
+                          getIt
+                              .get<SellerBloc>()
+                              .add(ValidateSellerEvent(id: seller.id));
+                          if (state is ValidateSellerSuccessState) {
+                            getIt.get<SellersBloc>().add(GetSellerEvent());
+                          }
                         },
-                        child: const Text('Refuser'),
+                        child: const Text('Accepter'),
                       )),
                       DataCell(ElevatedButton(
                           onPressed: () {

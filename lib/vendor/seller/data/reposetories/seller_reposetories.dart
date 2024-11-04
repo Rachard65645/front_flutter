@@ -27,16 +27,16 @@ class SellerReposetories {
 
   Future<SellerModel> validateSeller({required String id}) async {
     final data = await service.validateSeller(id: id);
-    return SellerModel.fromJson(data['Sellers']);
+    return data;
   }
 
   Future<SellerModel> refuseSeller({required String id}) async {
-    final data = await service.refuseSeller(id: id);
-    return SellerModel.fromJson(data['Sellers']);
+    final data =  await service.refuseSeller(id: id);
+    return data;
   }
 
   Future<SellerModel> deleteSeller({required String id}) async {
     final data = await service.deleteSeller(id: id);
-    return SellerModel.fromJson(data['Sellers']);
+    return data;
   }
 }

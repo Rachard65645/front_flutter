@@ -9,13 +9,13 @@ part 'stations_state.dart';
 class StationsBloc extends Bloc<StationsEvent, StationsState> {
   final StationsRepository repository;
   StationsBloc({required this.repository}) : super(StationsInitial()) {
-    on<StationsEvent>((event, emit) async {
+    on<GetStationsEvent>((event, emit) async {
       try {
         emit(StationsLoading());
         final stations = await repository.getStations();
         emit(GetStationSSuccess(stations: stations));
       } catch (err) {
-        emit(StationFailure(message: err.toString()));
+        emit(StationsFailure(message: err.toString()));
       }
     });
   }

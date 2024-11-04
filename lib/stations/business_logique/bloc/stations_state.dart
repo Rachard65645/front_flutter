@@ -15,8 +15,8 @@ final class GetStationSSuccess extends StationsState {
   const GetStationSSuccess({required super.stations});
 }
 
-final class StationFailure extends StationsState {
+final class StationsFailure extends StationsState {
   final String message;
 
-  const StationFailure({super.stations, required this.message});
+  const StationsFailure({required this.message});
 }

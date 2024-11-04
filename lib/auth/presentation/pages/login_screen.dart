@@ -1,13 +1,13 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gas/auth/business_logic/login_bloc/login_bloc.dart';
-import 'package:gas/auth/presentation/pages/register_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gas/service_locator.dart';
-import 'package:gas/vendor/sellers/presentation/fetch_seller_creen.dart';
-import 'package:gas/vendor/sellers/business_logique/bloc/sellers_bloc.dart';
+import 'package:gas/router/app_router.gr.dart';
 
+@RoutePage()
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -41,12 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.white,
       body: BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) {
-          getIt.get<SellersBloc>().add(GetSellerEvent());
           if (state is LoginSuccess) {
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const FetchSellerCreen()),
-              (router) => false,
-            );
+            context.router.replaceAll([const ApplicationRoute()]);
           }
 
           if (state is LoginFailure) {
@@ -153,9 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           TextButton(
                               onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (contex) =>
-                                        const RegisterScreen()));
+                                context.router.push(const RegisterRoute());
                               },
                               child: const Text('SingUp',
                                   style: TextStyle(

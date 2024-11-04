@@ -19,8 +19,6 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
             email: event.email,
             password: event.password,
             phone: event.phone,
-            city: event.city,
-            address: event.address,
           );
         emit(RegisterSuccess(user: register));
       } catch (err) {

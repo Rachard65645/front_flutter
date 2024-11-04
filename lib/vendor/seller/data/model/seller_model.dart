@@ -6,7 +6,7 @@ class SellerModel {
   final String patente;
   final String cc;
   final String? status;
-  final User users;
+  final User? users;
 
   SellerModel({
     required this.id,
@@ -15,7 +15,7 @@ class SellerModel {
     required this.patente,
     required this.cc,
     this.status,
-    required this.users
+    this.users
   });
 
   factory SellerModel.fromJson(Map<String, dynamic> json) {

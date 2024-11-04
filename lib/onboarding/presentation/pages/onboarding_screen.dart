@@ -1,14 +1,16 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gas/onboarding/presentation/widget/screen_one.dart';
 import 'package:gas/onboarding/presentation/widget/screen_three.dart';
 import 'package:gas/onboarding/presentation/widget/screen_two.dart';
+import 'package:gas/router/app_router.gr.dart';
 import 'package:gas/shared/extensions/context_extensions.dart';
 import 'package:gas/shared/theme/app_colors.dart';
 import 'package:gas/shared/widgets/gap.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../../auth/presentation/pages/login_screen.dart';
-
+@RoutePage()
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -116,12 +118,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             pageController.nextPage(
                                 duration: const Duration(milliseconds: 500),
                                 curve: Curves.ease);
-
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => const LoginScreen()),
-                              (router) => false,
-                            );
+                                context.router.replaceAll([const LoginRoute()]);
                           },
                           child: Container(
                             height: 30,

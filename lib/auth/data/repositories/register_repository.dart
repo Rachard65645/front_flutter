@@ -11,16 +11,12 @@ class RegisterRepository {
     required String email,
     required String password,
     required String phone,
-    required String city,
-    required String address,
   }) async {
     var data = await service.register(
       name: name,
       email: email,
       password: password,
       phone: phone,
-      city: city,
-      address: address,
     );
 
     return UserModel.fromJson(data);

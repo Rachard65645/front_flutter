@@ -45,5 +45,33 @@ class SellerBloc extends Bloc<SellerEvent, SellerState> {
         }
       },
     );
+
+     on<RefuseSellerEvent>(
+      (event, emit) async {
+        try {
+          emit(SellerListLoading());
+          final validate = await repository.refuseSeller(id: event.id);
+          emit(RefuseSellerSuccessState(seller: validate));
+        } catch (err) {
+           emit(SellerFailureState(message: err.toString()));
+        }
+      },
+    );
+
+    on<DeleteSellerEvent>(
+      (event, emit) async {
+        try {
+          emit(SellerListLoading());
+          final validate = await repository.deleteSeller(id: event.id);
+          emit(DeleteSellerSuccessState(seller: validate));
+        } catch (err) {
+           emit(SellerFailureState(message: err.toString()));
+        }
+      },
+    );
+
+
   }
+
+  
 }
