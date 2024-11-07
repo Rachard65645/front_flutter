@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gas/home_screen.dart';
 import 'package:gas/nav_bar.dart';
 import 'package:gas/station/presentation/get_stations_screen.dart';
+import 'package:gas/vendor/sellers/presentation/fetch_seller_screen.dart';
 import 'package:get/get.dart';
 
 @RoutePage()
@@ -13,10 +15,6 @@ class ApplicationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(NavigationController());
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text("Allo gaz !!"),
-        ),
         body: Obx(() => controller.screens[controller.sellectedIndex.value]),
         drawer: const NavBar(),
         bottomNavigationBar: Obx(
@@ -41,13 +39,9 @@ class ApplicationScreen extends StatelessWidget {
 class NavigationController extends GetxController {
   final Rx<int> sellectedIndex = 0.obs;
   final screens = [
+    const HomeScreen(),
     const GetStationsScreen(),
-    Container(
-      color: Colors.black,
-    ),
-    Container(
-      color: Colors.blue,
-    ),
+    const FetchSellersCreen(),
     Container(
       color: Colors.red,
     )

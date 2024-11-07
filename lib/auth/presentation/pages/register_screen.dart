@@ -1,10 +1,11 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:gas/auth/presentation/pages/login_screen.dart';
 import 'package:gas/router/app_router.gr.dart';
+import 'package:gas/service_locator.dart';
 import '../../business_logic/register_bloc/register_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -26,11 +27,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void initState() {
+    super.initState();
     nameController = TextEditingController();
     phoneController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
-    super.initState();
   }
 
   @override
@@ -49,10 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: BlocConsumer<RegisterBloc, RegisterState>(
         listener: (context, state) {
           if (state is RegisterSuccess) {
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const LoginScreen()),
-              (router) => false,
-            );
+            context.router.pushAll([const LoginRoute()]);
           } else if (state is RegisterFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
@@ -168,14 +166,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 70),
                           child: ElevatedButton(
                               onPressed: () {
+                                if (state is RegisterLoading) {
+                                  const Center(child: CupertinoActivityIndicator(color: Colors.orange,));
+                                }
                                 if (_formkey.currentState!.validate()) {
-                                  context.read<RegisterBloc>().add(
-                                      RegisterAuthEvent(
-                                          name: nameController.text,
-                                          email: emailController.text,
-                                          password: passwordController.text,
-                                          phone: phoneController.text,
-                                         ));
+                                  getIt
+                                      .get<RegisterBloc>()
+                                      .add(RegisterAuthEvent(
+                                        name: nameController.text,
+                                        email: emailController.text,
+                                        password: passwordController.text,
+                                        phone: phoneController.text,
+                                      ));
                                 }
                               },
                               style: ElevatedButton.styleFrom(
@@ -200,7 +202,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  context.router.push(const  LoginRoute());
+                                  context.router.push(const LoginRoute());
                                 },
                                 child: const Text('Login now',
                                     style: TextStyle(

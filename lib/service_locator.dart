@@ -25,7 +25,7 @@ final getIt = GetIt.instance;
 
 void setupLocator() {
   getIt.registerSingleton<Dio>(Dio(
-    BaseOptions(baseUrl: 'http://172.20.10.2:4000/api'),
+    BaseOptions(baseUrl: 'http://192.168.1.77:4000/api'),
   )..interceptors.add(TokenInterceptor()));
 
   getIt.registerSingleton(RegisterService(http: getIt.get<Dio>()));

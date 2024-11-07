@@ -43,9 +43,7 @@ class FetchSellersCreen extends StatelessWidget {
                     'Name',
                     style: TextStyle(color: Colors.amber),
                   )),
-                  DataColumn(label: Text('show')),
-                  DataColumn(label: Text('Refuse')),
-                  DataColumn(label: Text('delete'))
+                  DataColumn(label: Text('show'))
                 ],
                 rows: state.sellers!.map<DataRow>((seller) {
                   return DataRow(
@@ -60,25 +58,7 @@ class FetchSellersCreen extends StatelessWidget {
                         },
                         child: const Text('show'),
                       )),
-                      DataCell(ElevatedButton(
-                        onPressed: () {
-                          getIt
-                              .get<SellerBloc>()
-                              .add(ValidateSellerEvent(id: seller.id));
-                          if (state is ValidateSellerSuccessState) {
-                            getIt.get<SellersBloc>().add(GetSellerEvent());
-                          }
-                        },
-                        child: const Text('Accepter'),
-                      )),
-                      DataCell(ElevatedButton(
-                          onPressed: () {
-                            context
-                                .read<SellerBloc>()
-                                .add(DeleteSellerEvent(id: seller.id));
-                          },
-                          child: const Text('delete')))
-                    ],
+                     ]
                   );
                 }).toList(),
               ),

@@ -5,5 +5,8 @@ class GasBottlesService {
 
   GasBottlesService({required this.http});
 
-  
+  Future<dynamic> getGasBottle() async {
+    Response response = await http.get('/bottles');
+    return response.data;
+  }
 }
