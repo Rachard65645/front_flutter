@@ -119,6 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 20,
                       ),
                       ElevatedButton(
+                        
                           onPressed: () {
                             if (_formkey.currentState!.validate()) {
                               context.read<LoginBloc>().add(
@@ -129,14 +130,22 @@ class _LoginScreenState extends State<LoginScreen> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
+                              backgroundColor: Color.fromARGB(206, 255, 98, 0),
                               minimumSize: const Size(750, 40)),
-                          child: const Text(
-                            'Login',
-                            style: TextStyle(
+                          child: state is LoginLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )  
+                          : const Text(
+                              'Login',
+                              style: TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          )),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                    
+                          
+                          ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -149,6 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           TextButton(
                               onPressed: () {
+
                                 context.router.push(const RegisterRoute());
                               },
                               child: const Text('SingUp',

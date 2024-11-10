@@ -5,6 +5,9 @@ import 'package:gas/auth/data/repositories/login_repository.dart';
 import 'package:gas/auth/data/repositories/register_repository.dart';
 import 'package:gas/auth/data/service/login_service.dart';
 import 'package:gas/auth/data/service/register_service.dart';
+import 'package:gas/positions/business_logic/bloc/position_bloc.dart';
+import 'package:gas/positions/data/reposetories/position_reposetory.dart';
+import 'package:gas/positions/data/services/position_service.dart';
 import 'package:gas/shared/token_interceptor.dart';
 import 'package:gas/station/business_logique/bloc/station_bloc.dart';
 import 'package:gas/station/data/repositories/station_repository.dart';
@@ -18,6 +21,10 @@ import 'package:gas/vendor/seller/data/services/seller_service.dart';
 import 'package:gas/vendor/sellers/business_logique/bloc/sellers_bloc.dart';
 import 'package:gas/vendor/sellers/data/reposetories/sellers_reposetory.dart';
 import 'package:gas/vendor/sellers/data/services/sellers_service.dart';
+import 'package:gas/vendor/stores/business_logic/bloc/stores_bloc.dart';
+import 'package:gas/vendor/stores/data/reposetories/stores_reposetory.dart';
+import 'package:gas/vendor/stores/data/services/stores_service.dart';
+
 
 import 'package:get_it/get_it.dart';
 
@@ -25,7 +32,7 @@ final getIt = GetIt.instance;
 
 void setupLocator() {
   getIt.registerSingleton<Dio>(Dio(
-    BaseOptions(baseUrl: 'http://192.168.1.77:4000/api'),
+    BaseOptions(baseUrl: 'http://172.20.10.2:4000/api'),
   )..interceptors.add(TokenInterceptor()));
 
   getIt.registerSingleton(RegisterService(http: getIt.get<Dio>()));
@@ -61,4 +68,18 @@ void setupLocator() {
       StationRepository(service: getIt.get<StationService>()));
   getIt.registerSingleton(
       StationBloc(repository: getIt.get<StationRepository>()));
+
+  getIt.registerSingleton(PositionService(http: getIt.get<Dio>()));
+  getIt.registerSingleton(
+      PositionReposetory(service: getIt.get<PositionService>()));
+  getIt.registerSingleton(
+      PositionBloc(reposetory: getIt.get<PositionReposetory>()));
+
+getIt.registerSingleton(StoresService(http: getIt.get<Dio>()));
+  getIt.registerSingleton(
+      StoresReposetory(service: getIt.get<StoresService>()));
+  getIt.registerSingleton(
+      StoresBloc(reposetory: getIt.get<StoresReposetory>()));
+  
+
 }

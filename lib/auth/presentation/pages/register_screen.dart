@@ -166,9 +166,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 70),
                           child: ElevatedButton(
                               onPressed: () {
-                                if (state is RegisterLoading) {
-                                  const Center(child: CupertinoActivityIndicator(color: Colors.orange,));
-                                }
+                               
                                 if (_formkey.currentState!.validate()) {
                                   getIt
                                       .get<RegisterBloc>()
@@ -181,14 +179,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  minimumSize: const Size(750, 50)),
-                              child: const Text(
-                                'Sing up',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              )),
+                              backgroundColor: Color.fromARGB(206, 255, 98, 0),
+                              minimumSize: const Size(750, 40)),
+                          child: state is RegisterLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )  
+                          : const Text(
+                              'Register',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                        ),
                         ),
                         const SizedBox(
                           height: 20,

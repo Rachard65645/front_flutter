@@ -132,7 +132,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                             alignment: Alignment.center,
                             child: Text(
-                              'Finich',
+                              'Finish',
                               style: context.textTheme.bodyLarge?.copyWith(
                                   color: AppColors.black,
                                   fontSize: 15,

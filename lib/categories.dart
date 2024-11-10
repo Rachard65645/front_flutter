@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gas/stations/business_logique/bloc/stations_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Categories extends StatelessWidget {
   const Categories({super.key});
@@ -16,7 +17,46 @@ class Categories extends StatelessWidget {
         }
 
         if (state is StationsLoading) {
-          return const CupertinoActivityIndicator();
+          // Afficher Shimmer en attendant le chargement
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding:
+                const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(5, (index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Column(
+                    children: [
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          width: 60.0,
+                          height: 60.0,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          width: 50.0,
+                          height: 10.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ),
+          );
         }
 
         if (state.stations?.isEmpty ?? true) {
@@ -49,9 +89,9 @@ class Categories extends StatelessWidget {
                         ),
                         child: CircleAvatar(
                           radius: 30.0,
-                          backgroundColor: Colors.amber,
+                          backgroundColor: Color.fromARGB(206, 255, 98, 0),
                           backgroundImage: CachedNetworkImageProvider(
-                            'http://192.168.1.77:4000/api/${station.logo}', // URL de l'image avec cache
+                            'http://172.20.10.2:4000/api/${station.logo}',
                           ),
                         ),
                       ),

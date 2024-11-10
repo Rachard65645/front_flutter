@@ -3,7 +3,6 @@ part of 'store_bloc.dart';
 @immutable
 sealed class StoreEvent {}
 
-final class FetchStoreEvent extends StoreEvent {}
 
 final class CreateStoreEvent extends StoreEvent {
   final String name;

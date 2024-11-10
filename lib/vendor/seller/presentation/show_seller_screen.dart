@@ -25,7 +25,7 @@ class ShowSellerScreen extends StatelessWidget {
               height: 100,
               width: 100,
               child: Image.network(
-                  'http://192.168.1.77:4000/api/${state.seller!.cc}'),
+                  'http://172.20.10.2:4000/api/${state.seller!.cc}'),
             );
           }
           return Container();
