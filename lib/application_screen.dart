@@ -1,10 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gas/home_screen.dart';
 import 'package:gas/nav_bar.dart';
-import 'package:gas/positions/business_logic/bloc/position_bloc.dart';
 import 'package:gas/station/presentation/get_stations_screen.dart';
 import 'package:gas/vendor/sellers/presentation/fetch_seller_screen.dart';
 import 'package:gas/vendor/stores/presentation/current_store_page.dart';
@@ -18,110 +16,22 @@ class ApplicationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(NavigationController());
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(180),
-        child: Padding(
-          padding: const EdgeInsets.all(14.0),
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(206, 255, 98, 0),
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Builder(builder: (context) {
-                        return IconButton(
-                          icon: const Icon(Icons.menu, color: Colors.white),
-                          onPressed: () {
-                            Scaffold.of(context)
-                                .openDrawer(); // Ouvre le drawer
-                          },
-                        );
-                      }),
-                      const Text(
-                        'HOME',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.search,
-                            color: Color.fromARGB(206, 255, 98, 0),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Your location',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.location_on_outlined,
-                                color: Colors.white,
-                              ),
-                              BlocBuilder<PositionBloc, PositionState>(
-                                builder: (context, state) {
-                                  if (state is PositionInitial) {
-                                    context
-                                        .read<PositionBloc>()
-                                        .add(GetPositionEvent());
-                                  }
-                                  if (state is PositionLoading) {
-                                    return const CircularProgressIndicator(
-                                      color: Colors.white,
-                                    );
-                                  }
-                                  if (state is PositionSuccess) {
-                                    return Text(
-                                      state.position!.city,
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    );
-                                  }
-                                  return Container();
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.notifications_none,
-                            color: Color.fromARGB(206, 255, 98, 0),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text(
+          'HOME',
+          style: TextStyle(
+              color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
         ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.search,
+                color: Color.fromARGB(206, 255, 98, 0),
+              ))
+        ],
       ),
       drawer: const NavBar(),
       body: Obx(() => controller.screens[controller.sellectedIndex.value]),

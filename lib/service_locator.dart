@@ -21,6 +21,9 @@ import 'package:gas/vendor/seller/data/services/seller_service.dart';
 import 'package:gas/vendor/sellers/business_logique/bloc/sellers_bloc.dart';
 import 'package:gas/vendor/sellers/data/reposetories/sellers_reposetory.dart';
 import 'package:gas/vendor/sellers/data/services/sellers_service.dart';
+import 'package:gas/vendor/store/business_logique/bloc/store_bloc.dart';
+import 'package:gas/vendor/store/data/repositories/store_repository.dart';
+import 'package:gas/vendor/store/data/services/store_service.dart';
 import 'package:gas/vendor/stores/business_logic/bloc/stores_bloc.dart';
 import 'package:gas/vendor/stores/data/reposetories/stores_reposetory.dart';
 import 'package:gas/vendor/stores/data/services/stores_service.dart';
@@ -32,7 +35,7 @@ final getIt = GetIt.instance;
 
 void setupLocator() {
   getIt.registerSingleton<Dio>(Dio(
-    BaseOptions(baseUrl: 'http://172.20.10.2:4000/api'),
+    BaseOptions(baseUrl: 'http://192.168.1.77:4000/api'),
   )..interceptors.add(TokenInterceptor()));
 
   getIt.registerSingleton(RegisterService(http: getIt.get<Dio>()));
@@ -80,6 +83,12 @@ getIt.registerSingleton(StoresService(http: getIt.get<Dio>()));
       StoresReposetory(service: getIt.get<StoresService>()));
   getIt.registerSingleton(
       StoresBloc(reposetory: getIt.get<StoresReposetory>()));
+
+getIt.registerSingleton(StoreService (http: getIt.get<Dio>()));
+  getIt.registerSingleton(
+      StoreRepository(service: getIt.get<StoreService>()));
+  getIt.registerSingleton(
+      StoreBloc(repository: getIt.get<StoreRepository>()));
   
 
 }

@@ -5,8 +5,8 @@ class StoreService {
 
   StoreService({required this.http});
 
-  Future<dynamic> getStores() async {
-    Response response = await http.get('/store');
+  Future<dynamic> getStoreId({required String id}) async {
+    Response response = await http.get('/store/$id');
     return response.data;
   }
 
@@ -17,15 +17,13 @@ class StoreService {
     required String logo,
     required String pseudo,
   }) async {
-    Response response = await http.post('/store/add', 
-    data: {
+    Response response = await http.post('/store/add', data: {
       'name': name,
       'address': address,
       'city': city,
       'logo': logo,
       'pseudo': pseudo,
-    }
-    );
+    });
     return response.data;
   }
 }

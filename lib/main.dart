@@ -9,6 +9,7 @@ import 'package:gas/station/business_logique/bloc/station_bloc.dart';
 import 'package:gas/stations/business_logique/bloc/stations_bloc.dart';
 import 'package:gas/vendor/seller/business_logique/bloc/seller_bloc.dart';
 import 'package:gas/vendor/sellers/business_logique/bloc/sellers_bloc.dart';
+import 'package:gas/vendor/store/business_logique/bloc/store_bloc.dart';
 import 'package:gas/vendor/stores/business_logic/bloc/stores_bloc.dart';
 
 void main() {
@@ -17,8 +18,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
- MyApp({super.key});
-final _appRouter = AppRouter();
+  MyApp({super.key});
+  final _appRouter = AppRouter();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -48,11 +49,14 @@ final _appRouter = AppRouter();
         BlocProvider(
           create: (context) => getIt.get<StoresBloc>(),
         ),
-      ], 
+        BlocProvider(
+          create: (context) => getIt.get<StoreBloc>(),
+        ),
+      ],
       child: MaterialApp.router(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(),
+        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
         routerConfig: _appRouter.config(),
       ),
     );

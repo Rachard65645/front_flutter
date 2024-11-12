@@ -6,7 +6,7 @@ class StoresService {
   StoresService({required this.http});
 
   Future<dynamic> getStores() async {
-    Response response = await http.get('/store');
+    Response response = await http.get('/stores');
     return response.data;
   }
 }
