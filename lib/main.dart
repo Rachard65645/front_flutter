@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gas/auth/business_logic/login_bloc/login_bloc.dart';
 import 'package:gas/auth/business_logic/register_bloc/register_bloc.dart';
+import 'package:gas/gas_bottles/business_logic/bloc/gas_bottles_bloc.dart';
+import 'package:gas/orders/business_logique/bloc/orders_bloc.dart';
 import 'package:gas/positions/business_logic/bloc/position_bloc.dart';
 import 'package:gas/router/app_router.dart';
 import 'package:gas/service_locator.dart';
@@ -51,6 +53,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => getIt.get<StoreBloc>(),
+        ),
+         BlocProvider(
+          create: (context) => getIt.get<GasBottlesBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt.get<OrdersBloc>(),
         ),
       ],
       child: MaterialApp.router(

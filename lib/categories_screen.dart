@@ -2,7 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gas/stations/business_logique/bloc/stations_bloc.dart';
+import 'package:gas/gas_bottles/business_logic/bloc/gas_bottles_bloc.dart';
+import 'package:gas/service_locator.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CategoriesScreen extends StatelessWidget {
@@ -31,13 +32,13 @@ class CategoriesScreen extends StatelessWidget {
             ],
           ),
         ),
-        BlocBuilder<StationsBloc, StationsState>(
+        BlocBuilder<GasBottlesBloc, GasBottlesState>(
           builder: (context, state) {
-            if (state is StationsInitial) {
-              context.read<StationsBloc>().add(GetStationsEvent());
+            if (state is GasBottlesInitial) {
+              context.read<GasBottlesBloc>().add(GetBottlesEvent());
             }
 
-            if (state is StationsLoading) {
+            if (state is GasBottlesLoading) {
               // Afficher Shimmer en attendant le chargement
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -80,18 +81,18 @@ class CategoriesScreen extends StatelessWidget {
               );
             }
 
-            if (state.stations?.isEmpty ?? true) {
-              return const Center(child: Text("No sations yet"));
+            if (state.bottles?.isEmpty ?? true) {
+              return const Center(child: Text("No categories yet"));
             }
 
-            if (state is GetStationSSuccess) {
+            if (state is GetGasBottlesSuccess) {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(
                     vertical: 15.0, horizontal: 10.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: state.stations!.map((station) {
+                  children: state.bottles!.map((bottle) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       child: Column(
@@ -113,20 +114,35 @@ class CategoriesScreen extends StatelessWidget {
                               ],
                               image: DecorationImage(
                                 image: CachedNetworkImageProvider(
-                                  'http://192.168.1.77:4000/api/${station.logo}',
+                                  'http://$IpGlobal:4000/api/${bottle.image}',
                                 ),
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
                           const SizedBox(height: 5),
-                          Text(
-                            station.name,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey[700],
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                bottle.gasStations.name,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 3,
+                              ),
+                              Text(
+                                bottle.bottlesCategories.weight,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

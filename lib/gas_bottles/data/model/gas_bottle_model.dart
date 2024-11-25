@@ -51,7 +51,7 @@ class GasStation {
 
 
 class BottleCategory {
-  final num weight;
+  final String weight;
 
   BottleCategory({required this.weight});
 

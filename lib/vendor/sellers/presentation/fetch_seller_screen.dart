@@ -3,74 +3,129 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gas/router/app_router.gr.dart';
+import 'package:gas/gas_bottles/business_logic/bloc/gas_bottles_bloc.dart';
+import 'package:gas/nav_bar.dart';
 import 'package:gas/service_locator.dart';
-import 'package:gas/vendor/seller/business_logique/bloc/seller_bloc.dart';
-import 'package:gas/vendor/sellers/business_logique/bloc/sellers_bloc.dart';
 
 @RoutePage()
-class FetchSellersCreen extends StatelessWidget {
+class FetchSellersCreen extends StatefulWidget {
   const FetchSellersCreen({super.key});
+
+  @override
+  _FetchSellersScreenState createState() => _FetchSellersScreenState();
+}
+
+class _FetchSellersScreenState extends State<FetchSellersCreen> {
+  int _expandedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sellers'),
+        title: const Text(
+          'Gs Categories',
+          style: TextStyle(
+              color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
-      body: BlocBuilder<SellersBloc, SellersState>(
+      drawer: NavBar(),
+      body: BlocBuilder<GasBottlesBloc, GasBottlesState>(
         builder: (context, state) {
-          if (state is SellersInitial) {
-            context.read<SellersBloc>().add(GetSellerEvent());
-          }
-
-          if (state is SellersListLoading) {
-            return const Center(child: CupertinoActivityIndicator());
-          }
-
-          if (state.sellers?.isEmpty ?? true) {
-            return const Center(child: Text("No sellers yet"));
-          } else if (state is GetSellerSuccessState) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: DataTable(
-                decoration: const BoxDecoration(
-                    color: const Color.fromARGB(74, 0, 0, 0)),
-                columns: const <DataColumn>[
-                  DataColumn(
-                      label: Text(
-                    'Name',
-                    style: TextStyle(color: Colors.amber),
-                  )),
-                  DataColumn(label: Text('show'))
-                ],
-                rows: state.sellers!.map<DataRow>((seller) {
-                  return DataRow(
-                    cells: <DataCell>[
-                      DataCell(Text(seller.users!.name)),
-                      DataCell(ElevatedButton(
-                        onPressed: () {
-                          getIt
-                              .get<SellerBloc>()
-                              .add(GetSellerByIdEvent(id: seller.id));
-                          context.router.push(const ShowSellerRoute());
-                        },
-                        child: const Text('show'),
-                      )),
-                     ]
-                  );
-                }).toList(),
+          if (state is GasBottlesLoading) {
+            return const Center(
+              child: CupertinoActivityIndicator(
+                color: Colors.amber,
               ),
             );
           }
 
-          if (state is SellersFailureState) {
-            return Center(
-              child: Text(state.message),
+          if (state.bottles?.isEmpty ?? true) {
+            return const Center(
+              child: Text(
+                "No categories yet",
+                style: TextStyle(fontSize: 18),
+              ),
             );
           }
-          return Container();
+
+          if (state is GetGasBottlesSuccess) {
+            return ListView.builder(
+              itemCount: state.bottles!.length,
+              itemBuilder: (context, index) {
+                final bottle = state.bottles![index];
+
+                final bool isExpanded = _expandedIndex == index;
+                final double containerHeight = isExpanded ? 200.0 : 80.0;
+
+                return GestureDetector(
+                  onTapDown: (_) {
+                    setState(() {
+                      _expandedIndex = index; 
+                    });
+                  },
+                  onTapUp: (_) {
+                    Future.delayed(const Duration(milliseconds: 200), () {
+                      setState(() {
+                        _expandedIndex = -1; 
+                      });
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    margin: const EdgeInsets.all(8.0),
+                    height: containerHeight,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                            'http://$IpGlobal:4000/api/${bottle.image}'),
+                        fit: BoxFit.contain, 
+                      ),
+                    ),
+                    child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        Positioned.fill(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              bottle.gasStations.name,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              bottle.bottlesCategories.weight,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+
+          
+          return const SizedBox.shrink();
         },
       ),
     );

@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gas/categories_screen.dart';
+import 'package:gas/nav_bar.dart';
 import 'package:gas/router/app_router.gr.dart';
 import 'package:gas/service_locator.dart';
 import 'package:gas/vendor/store/business_logique/bloc/store_bloc.dart';
@@ -17,11 +18,44 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text(
+          'HOME',
+          style: TextStyle(
+              color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.search,
+                color: Color.fromARGB(206, 255, 98, 0),
+              ))
+        ],
+      ),
+      drawer: const NavBar(),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Ajoutez vos catégories ici
           CategoriesScreen(),
           // BlocBuilder pour afficher les magasins
+          SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'The shops closest to you',
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(
+            height: 14,
+          ),
           Expanded(
             child: BlocBuilder<StoresBloc, StoresState>(
               builder: (context, state) {
@@ -70,7 +104,7 @@ class HomeScreen extends StatelessWidget {
                             radius: 30.0,
                             backgroundColor: Color.fromARGB(206, 255, 98, 0),
                             backgroundImage: CachedNetworkImageProvider(
-                              'http://192.168.1.77:4000/api/${state.stores![index].logo}',
+                              'http://$IpGlobal:4000/api/${state.stores![index].logo}',
                             ),
                           ),
                           title: Text(
@@ -84,16 +118,21 @@ class HomeScreen extends StatelessWidget {
                           trailing: Container(
                             height: 20,
                             width: 40,
-                            decoration: const BoxDecoration(
-                                color: Color.fromARGB(82, 76, 175, 79),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            child: const Center(
+                            decoration: BoxDecoration(
+                              color: state.stores![index].statusStore == "close"
+                                  ? Colors.red
+                                  : Color.fromARGB(82, 76, 175,
+                                      79), // Couleur rouge si le texte n'est pas "open"
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(5)),
+                            ),
+                            child: Center(
                               child: Text(
-                                'Open',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
+                                state.stores![index].statusStore,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),

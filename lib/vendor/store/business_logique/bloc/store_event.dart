@@ -14,11 +14,16 @@ final class CreateStoreEvent extends StoreEvent {
   final String city;
   final String logo;
   final String address;
+  final String statusStore;
+  final String aboutStore;
 
   CreateStoreEvent(
       {required this.name,
       required this.pseudo,
       required this.city,
       required this.logo,
-      required this.address});
+      required this.address,
+      required this.statusStore,
+      required this.aboutStore,
+      });
 }

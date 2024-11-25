@@ -5,6 +5,12 @@ import 'package:gas/auth/data/repositories/login_repository.dart';
 import 'package:gas/auth/data/repositories/register_repository.dart';
 import 'package:gas/auth/data/service/login_service.dart';
 import 'package:gas/auth/data/service/register_service.dart';
+import 'package:gas/gas_bottles/business_logic/bloc/gas_bottles_bloc.dart';
+import 'package:gas/gas_bottles/data/reposetories/gas_bottles_reposetory.dart';
+import 'package:gas/gas_bottles/data/services/gas_bottles_service.dart';
+import 'package:gas/orders/business_logique/bloc/orders_bloc.dart';
+import 'package:gas/orders/data/reposetories/orders_reposetory.dart';
+import 'package:gas/orders/data/services/orders_service.dart';
 import 'package:gas/positions/business_logic/bloc/position_bloc.dart';
 import 'package:gas/positions/data/reposetories/position_reposetory.dart';
 import 'package:gas/positions/data/services/position_service.dart';
@@ -28,14 +34,15 @@ import 'package:gas/vendor/stores/business_logic/bloc/stores_bloc.dart';
 import 'package:gas/vendor/stores/data/reposetories/stores_reposetory.dart';
 import 'package:gas/vendor/stores/data/services/stores_service.dart';
 
-
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
 
+const String IpGlobal = '192.168.1.77';
+
 void setupLocator() {
   getIt.registerSingleton<Dio>(Dio(
-    BaseOptions(baseUrl: 'http://192.168.1.77:4000/api'),
+    BaseOptions(baseUrl: 'http://$IpGlobal:4000/api'),
   )..interceptors.add(TokenInterceptor()));
 
   getIt.registerSingleton(RegisterService(http: getIt.get<Dio>()));
@@ -65,7 +72,7 @@ void setupLocator() {
       StationsRepository(service: getIt.get<StationsService>()));
   getIt.registerSingleton(
       StationsBloc(repository: getIt.get<StationsRepository>()));
-  
+
   getIt.registerSingleton(StationService(http: getIt.get<Dio>()));
   getIt.registerSingleton(
       StationRepository(service: getIt.get<StationService>()));
@@ -78,17 +85,22 @@ void setupLocator() {
   getIt.registerSingleton(
       PositionBloc(reposetory: getIt.get<PositionReposetory>()));
 
-getIt.registerSingleton(StoresService(http: getIt.get<Dio>()));
-  getIt.registerSingleton(
-      StoresReposetory(service: getIt.get<StoresService>()));
-  getIt.registerSingleton(
-      StoresBloc(reposetory: getIt.get<StoresReposetory>()));
+  getIt.registerSingleton(StoresService(http: getIt.get<Dio>()));
+  getIt
+      .registerSingleton(StoresReposetory(service: getIt.get<StoresService>()));
+  getIt
+      .registerSingleton(StoresBloc(reposetory: getIt.get<StoresReposetory>()));
 
-getIt.registerSingleton(StoreService (http: getIt.get<Dio>()));
-  getIt.registerSingleton(
-      StoreRepository(service: getIt.get<StoreService>()));
-  getIt.registerSingleton(
-      StoreBloc(repository: getIt.get<StoreRepository>()));
-  
+  getIt.registerSingleton(StoreService(http: getIt.get<Dio>()));
+  getIt.registerSingleton(StoreRepository(service: getIt.get<StoreService>()));
+  getIt.registerSingleton(StoreBloc(repository: getIt.get<StoreRepository>()));
 
+
+  getIt.registerSingleton(GasBottlesService(http: getIt.get<Dio>()));
+  getIt.registerSingleton(GasBottlesReposetory (service: getIt.get<GasBottlesService>()));
+  getIt.registerSingleton(GasBottlesBloc(reposetory: getIt.get<GasBottlesReposetory>()));
+
+  getIt.registerSingleton(OrdersService(http: getIt.get<Dio>()));
+  getIt.registerSingleton(OrdersReposetory (service: getIt.get<OrdersService>()));
+  getIt.registerSingleton(OrdersBloc(reposetory: getIt.get<OrdersReposetory>()));
 }

@@ -18,7 +18,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             address: event.address,
             city: event.city,
             logo: event.logo,
-            pseudo: event.pseudo);
+            pseudo: event.pseudo,
+            statusStore: event.statusStore,
+            aboutStore: event.aboutStore
+            );
         emit(CreateStoreSuccess(storeCreate: storeCreate));
       } catch (err) {
         emit(StoreFailure(message: err.toString()));

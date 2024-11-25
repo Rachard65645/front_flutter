@@ -2,6 +2,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gas/service_locator.dart';
 import 'package:gas/vendor/seller/business_logique/bloc/seller_bloc.dart';
 
 @RoutePage()
@@ -25,7 +26,7 @@ class ShowSellerScreen extends StatelessWidget {
               height: 100,
               width: 100,
               child: Image.network(
-                  'http://172.20.10.2:4000/api/${state.seller!.cc}'),
+                  'http://$IpGlobal:4000/api/${state.seller!.cc}'),
             );
           }
           return Container();

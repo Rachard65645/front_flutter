@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gas/service_locator.dart';
 import 'package:gas/vendor/stores/data/model/stores_model.dart';
 
 class StockScreen extends StatelessWidget {
@@ -9,58 +9,87 @@ class StockScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10), // Réduit le padding pour éviter les coupures
-      child: Container(
-        width: 150, // Largeur fixe pour chaque conteneur
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              blurRadius: 10,
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image en haut de la carte
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
             ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: CachedNetworkImage(
+              imageUrl: 'http://$IpGlobal:4000/api/${stock.gasBottle.image}',
+              height: 100,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              errorWidget: (context, url, error) => const Icon(
+                Icons.error,
+                color: Colors.red,
+                size: 40,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // Informations sur le stock
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  radius: 25,
-                  backgroundColor: Colors.orange,
-                  backgroundImage: CachedNetworkImageProvider(
-                    'http://192.168.1.77:4000/api/${stock.gasBottle.image}',
+                Tooltip(
+                  message: stock.gasBottle.gasStation.name,
+                  child: Text(
+                    stock.gasBottle.gasStation.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        stock.gasBottle.gasStation.name,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          letterSpacing: 0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        stock.gasBottle.bottleCategory.weight,
-                        style: const TextStyle(color: Colors.black54),
-                      ),
-                    ],
+                const SizedBox(height: 4),
+                Text(
+                  'Weight: ${stock.gasBottle.bottleCategory.weight}',
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontSize: 14,
                   ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '\XAF${stock.price.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        color: Colors.green,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                      size: 18,
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

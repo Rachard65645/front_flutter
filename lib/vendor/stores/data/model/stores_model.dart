@@ -6,16 +6,19 @@ class StoresModel {
   final List<Stock> stocks;
   final String pseudo;
   final Seller seller;
+  final String statusStore;
+  final String aboutStore;
 
-  StoresModel({
-    required this.id,
-    required this.name,
-    required this.logo,
-    required this.city,
-    required this.stocks,
-    required this.pseudo,
-    required this.seller,
-  });
+  StoresModel(
+      {required this.id,
+      required this.name,
+      required this.logo,
+      required this.city,
+      required this.stocks,
+      required this.pseudo,
+      required this.seller,
+      required this.statusStore,
+      required this.aboutStore});
 
   factory StoresModel.fromJson(Map<String, dynamic> json) {
     return StoresModel(
@@ -26,6 +29,8 @@ class StoresModel {
       stocks: (json['Stocks'] as List).map((i) => Stock.fromJson(i)).toList(),
       pseudo: json['pseudo'],
       seller: Seller.fromJson(json['sellers']),
+      statusStore: json['statusStore'],
+      aboutStore: json['aboutStore'],
     );
   }
 }
@@ -51,11 +56,13 @@ class Stock {
 }
 
 class GasBottle {
+  final String id;
   final String image;
   final GasStation gasStation;
   final BottleCategory bottleCategory;
 
   GasBottle({
+    required this.id,
     required this.image,
     required this.gasStation,
     required this.bottleCategory,
@@ -63,6 +70,7 @@ class GasBottle {
 
   factory GasBottle.fromJson(Map<String, dynamic> json) {
     return GasBottle(
+      id: json['id'],
       image: json['image'],
       gasStation: GasStation.fromJson(json['gasStations']),
       bottleCategory: BottleCategory.fromJson(json['bottlesCategories']),

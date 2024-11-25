@@ -92,8 +92,9 @@ class GetStationsScreen extends StatelessWidget {
                                     onPressed: () {
                                       getIt.get<StationBloc>().add(
                                           UpdateStationEvent(
-                                              id: state.stations![index].id, name: state.stations![index].name
-                                              ));
+                                              id: state.stations![index].id,
+                                              name:
+                                                  state.stations![index].name));
                                       context.router
                                           .push(const UpdateStationRoute());
                                     },

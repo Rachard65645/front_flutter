@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gas/service_locator.dart';
 import 'package:gas/vendor/stores/business_logic/bloc/stores_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -22,7 +23,7 @@ class CurrentStorePage extends StatelessWidget {
             crossAxisSpacing: 10.0,
             mainAxisSpacing: 10.0,
           ),
-          itemCount: 10, // Affichez un nombre fixe d'éléments en attente
+          itemCount: 10, 
           itemBuilder: (context, index) {
             return Shimmer.fromColors(
                 baseColor: Colors.grey[300]!,
@@ -30,21 +31,21 @@ class CurrentStorePage extends StatelessWidget {
                 child: Card(
                   child: Column(
                     children: [
-                      // Affichez une zone de chargement pour l'image
+                      
                       Container(
                         width: double.infinity,
                         height: 100,
                         color: Colors.grey[300],
                       ),
                       const SizedBox(height: 10),
-                      // Affichez un champ de texte de chargement
+                      
                       Container(
                         width: 80,
                         height: 10,
                         color: Colors.grey[300],
                       ),
                       const SizedBox(height: 5),
-                      // Affichez un autre champ de texte de chargement
+                      
                       Container(
                         width: 60,
                         height: 10,
@@ -65,18 +66,18 @@ class CurrentStorePage extends StatelessWidget {
         final stores = state.stores;
         return SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(8.0), // Ajoute un padding global
+            padding: const EdgeInsets.all(8.0), 
             child: GridView.builder(
               shrinkWrap:
-                  true, // Assure une taille adaptée pour l'inclusion dans SingleChildScrollView
+                  true, 
               physics:
-                  const NeverScrollableScrollPhysics(), // Désactive le scrolling interne
+                  const NeverScrollableScrollPhysics(), 
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Nombre de colonnes
-                crossAxisSpacing: 10, // Espacement entre les colonnes
-                mainAxisSpacing: 10, // Espacement entre les lignes
+                crossAxisCount: 2, 
+                crossAxisSpacing: 10, 
+                mainAxisSpacing: 10, 
                 childAspectRatio:
-                    0.75, // Ajustez le ratio pour une meilleure apparence
+                    0.75, 
               ),
               itemCount: stores!.length,
               itemBuilder: (context, index) {
@@ -88,14 +89,14 @@ class CurrentStorePage extends StatelessWidget {
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize
-                        .min, // Limite la taille de la Column à son contenu
+                        .min, 
                     children: [
                       Flexible(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: CachedNetworkImage(
                             imageUrl:
-                                'http://192.168.1.109:4000/api/${store.logo}',
+                                'http://$IpGlobal:4000/api/${store.logo}',
                             width: double.infinity,
                             fit: BoxFit.cover,
                           ),
@@ -123,7 +124,7 @@ class CurrentStorePage extends StatelessWidget {
                         backgroundColor: Color.fromARGB(206, 255, 98, 0),
                         child: IconButton(
                           onPressed: () {
-                            // Action du bouton
+                           
                           },
                           icon: const Icon(Icons.arrow_circle_right_rounded,
                               color: Colors.white),

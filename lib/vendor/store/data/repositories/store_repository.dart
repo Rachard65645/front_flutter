@@ -18,9 +18,18 @@ class StoreRepository {
     required String city,
     required String logo,
     required String pseudo,
+    required String statusStore,
+    required String aboutStore
   }) async {
     final data = await service.createStore(
-        name: name, address: address, city: city, logo: logo, pseudo: pseudo,);
+        name: name,
+        address: address,
+        city: city,
+        logo: logo,
+        pseudo: pseudo,
+        statusStore: statusStore,
+        aboutStore: aboutStore
+        );
     return StoreModel.fromJson(data);
   }
 }

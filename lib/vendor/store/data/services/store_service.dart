@@ -16,6 +16,8 @@ class StoreService {
     required String city,
     required String logo,
     required String pseudo,
+    required String statusStore,
+    required String aboutStore
   }) async {
     Response response = await http.post('/store/add', data: {
       'name': name,
@@ -23,6 +25,8 @@ class StoreService {
       'city': city,
       'logo': logo,
       'pseudo': pseudo,
+      'statusStore': statusStore,
+      'aboutStore': aboutStore,
     });
     return response.data;
   }

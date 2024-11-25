@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gas/home_screen.dart';
-import 'package:gas/nav_bar.dart';
 import 'package:gas/station/presentation/get_stations_screen.dart';
 import 'package:gas/vendor/sellers/presentation/fetch_seller_screen.dart';
 import 'package:gas/vendor/stores/presentation/current_store_page.dart';
@@ -16,24 +15,7 @@ class ApplicationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(NavigationController());
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text(
-          'HOME',
-          style: TextStyle(
-              color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                color: Color.fromARGB(206, 255, 98, 0),
-              ))
-        ],
-      ),
-      drawer: const NavBar(),
+      
       body: Obx(() => controller.screens[controller.sellectedIndex.value]),
       bottomNavigationBar: Obx(
         () => Container(
@@ -77,12 +59,12 @@ class ApplicationScreen extends StatelessWidget {
                 NavigationDestination(
                   icon: Icon(Icons.shop_outlined),
                   selectedIcon: Icon(Icons.shop),
-                  label: 'Store',
+                  label: 'Stores',
                 ),
                 NavigationDestination(
                   icon: Icon(Icons.person_outline),
                   selectedIcon: Icon(Icons.person),
-                  label: 'Profile',
+                  label: 'Gas Categories',
                 ),
                 NavigationDestination(
                   icon: Icon(Icons.map_rounded),

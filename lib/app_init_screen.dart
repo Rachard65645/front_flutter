@@ -18,7 +18,7 @@ class _AppInitScreenState extends State<AppInitScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed( const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 5), () {
       print('object');
     });
     context.read<LoginBloc>().add(CheckAuthStateEvent());
