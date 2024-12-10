@@ -8,6 +8,9 @@ import 'package:gas/auth/data/service/register_service.dart';
 import 'package:gas/gas_bottles/business_logic/bloc/gas_bottles_bloc.dart';
 import 'package:gas/gas_bottles/data/reposetories/gas_bottles_reposetory.dart';
 import 'package:gas/gas_bottles/data/services/gas_bottles_service.dart';
+import 'package:gas/order_users/business_logique/bloc/order_user_bloc.dart';
+import 'package:gas/order_users/data/reposetories/order_user_reposetories.dart';
+import 'package:gas/order_users/data/services/order_user_service.dart';
 import 'package:gas/orders/business_logique/bloc/orders_bloc.dart';
 import 'package:gas/orders/data/reposetories/orders_reposetory.dart';
 import 'package:gas/orders/data/services/orders_service.dart';
@@ -21,6 +24,9 @@ import 'package:gas/station/data/services/station_service.dart';
 import 'package:gas/stations/business_logique/bloc/stations_bloc.dart';
 import 'package:gas/stations/data/repositories/stations_repository.dart';
 import 'package:gas/stations/data/services/stations_service.dart';
+import 'package:gas/vendor/search_store/business_logique/bloc/search_stores_bloc.dart';
+import 'package:gas/vendor/search_store/data/reposetories/search_stores_reposetories.dart';
+import 'package:gas/vendor/search_store/data/service/search_stores_service.dart';
 import 'package:gas/vendor/seller/business_logique/bloc/seller_bloc.dart';
 import 'package:gas/vendor/seller/data/reposetories/seller_reposetories.dart';
 import 'package:gas/vendor/seller/data/services/seller_service.dart';
@@ -30,6 +36,9 @@ import 'package:gas/vendor/sellers/data/services/sellers_service.dart';
 import 'package:gas/vendor/store/business_logique/bloc/store_bloc.dart';
 import 'package:gas/vendor/store/data/repositories/store_repository.dart';
 import 'package:gas/vendor/store/data/services/store_service.dart';
+import 'package:gas/vendor/store_user/business_logique/bloc/store_user_bloc.dart';
+import 'package:gas/vendor/store_user/data/reposetories/store_user_reposetory.dart';
+import 'package:gas/vendor/store_user/data/services/store_user_service.dart';
 import 'package:gas/vendor/stores/business_logic/bloc/stores_bloc.dart';
 import 'package:gas/vendor/stores/data/reposetories/stores_reposetory.dart';
 import 'package:gas/vendor/stores/data/services/stores_service.dart';
@@ -95,12 +104,33 @@ void setupLocator() {
   getIt.registerSingleton(StoreRepository(service: getIt.get<StoreService>()));
   getIt.registerSingleton(StoreBloc(repository: getIt.get<StoreRepository>()));
 
-
   getIt.registerSingleton(GasBottlesService(http: getIt.get<Dio>()));
-  getIt.registerSingleton(GasBottlesReposetory (service: getIt.get<GasBottlesService>()));
-  getIt.registerSingleton(GasBottlesBloc(reposetory: getIt.get<GasBottlesReposetory>()));
+  getIt.registerSingleton(
+      GasBottlesReposetory(service: getIt.get<GasBottlesService>()));
+  getIt.registerSingleton(
+      GasBottlesBloc(reposetory: getIt.get<GasBottlesReposetory>()));
 
   getIt.registerSingleton(OrdersService(http: getIt.get<Dio>()));
-  getIt.registerSingleton(OrdersReposetory (service: getIt.get<OrdersService>()));
-  getIt.registerSingleton(OrdersBloc(reposetory: getIt.get<OrdersReposetory>()));
+  getIt
+      .registerSingleton(OrdersReposetory(service: getIt.get<OrdersService>()));
+  getIt
+      .registerSingleton(OrdersBloc(reposetory: getIt.get<OrdersReposetory>()));
+
+  getIt.registerSingleton(SearchStoresService(http: getIt.get<Dio>()));
+  getIt.registerSingleton(
+      SearchStoresReposetories(service: getIt.get<SearchStoresService>()));
+  getIt.registerSingleton(
+      SearchStoresBloc(reposetories: getIt.get<SearchStoresReposetories>()));
+
+  getIt.registerSingleton(OrderUserService(http: getIt.get<Dio>()));
+  getIt.registerSingleton(
+      OrderUserReposetories(service: getIt.get<OrderUserService>()));
+  getIt.registerSingleton(
+      OrderUserBloc(reposetories: getIt.get<OrderUserReposetories>()));
+  
+  getIt.registerSingleton(StoreUserService(http: getIt.get<Dio>()));
+  getIt.registerSingleton(
+      StoreUserReposetory(service: getIt.get<StoreUserService>()));
+  getIt.registerSingleton(
+      StoreUserBloc(reposetory: getIt.get<StoreUserReposetory>()));
 }

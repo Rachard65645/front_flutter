@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gas/orders/business_logique/bloc/orders_bloc.dart';
 import 'package:gas/service_locator.dart';
 import 'package:gas/vendor/store/business_logique/bloc/store_bloc.dart';
+import 'package:gas/vendor/store/presentation/payment_page.dart';
 
 @RoutePage()
 class ShowStoreScreen extends StatefulWidget {
@@ -51,13 +52,49 @@ class _ShowStoreScreenState extends State<ShowStoreScreen> {
                   pinned: true,
                   backgroundColor: Colors.orange,
                   flexibleSpace: FlexibleSpaceBar(
-                    title: Text(
-                      state.store?.name ?? '',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    title: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 50,
+                        ),
+                        Text(
+                          state.store?.name ?? '',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              size: 16,
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(state.store?.city ?? '',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(state.store?.address ?? '',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ))
+                          ],
+                        )
+                      ],
                     ),
                     centerTitle: true,
                     background: Stack(
@@ -83,12 +120,46 @@ class _ShowStoreScreenState extends State<ShowStoreScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "About ${state.store?.name ?? ''}",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.phone,
+                                      color: Colors.orange,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      state.store?.seller.user.phone ?? '',
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.email,
+                                      color: Colors.orange,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      state.store?.seller.user.email ?? '',
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                             Container(
                               height: 20,
@@ -118,132 +189,161 @@ class _ShowStoreScreenState extends State<ShowStoreScreen> {
                           style: const TextStyle(fontSize: 14),
                         ),
                         const SizedBox(height: 20),
+                        Text(
+                          'available stocks',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
                         state.store?.stocks.isNotEmpty ?? false
                             ? GridView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                 shrinkWrap: true,
-                                padding: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
                                 gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
+                                    SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent:
+                                      250, // La taille maximale d'un élément
                                   crossAxisSpacing: 10,
                                   mainAxisSpacing: 10,
+                                  childAspectRatio:
+                                      0.7, // Ajuste la proportion de l'élément (hauteur/largeur)
                                 ),
                                 itemCount: state.store!.stocks.length,
                                 itemBuilder: (context, index) {
                                   final stock = state.store!.stocks[index];
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          'http://$IpGlobal:4000/api/${stock.gasBottle.image}',
-                                        ),
-                                        fit: BoxFit.cover,
+                                  return GestureDetector(
+                                    onTap: () {
+                                      _showOrderDialog(
+                                        context,
+                                        stock.gasBottle.gasStation.name,
+                                        stock.price,
+                                        stock.gasBottle.id,
+                                        'uhfuhfizuhfiuz',
+                                        state.store?.id ?? '',
+                                        'http://$IpGlobal:4000/api/${stock.gasBottle.image}',
+                                      );
+                                    },
+                                    child: Card(
+                                      elevation: 8,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
-                                    ),
-                                    child: Stack(
-                                      alignment: AlignmentDirectional.center,
-                                      children: [
-                                        Positioned.fill(
-                                          child: Container(
+                                      clipBehavior: Clip.antiAlias,
+                                      child: Stack(
+                                        fit: StackFit.expand,
+                                        children: [
+                                          // Image du produit
+                                          Image.network(
+                                            'http://$IpGlobal:4000/api/${stock.gasBottle.image}',
+                                            fit: BoxFit.cover,
+                                          ),
+                                          // Effet d'ombrage
+                                          Container(
                                             decoration: BoxDecoration(
                                               color:
                                                   Colors.black.withOpacity(0.5),
                                               borderRadius:
-                                                  BorderRadius.circular(10),
+                                                  BorderRadius.circular(15),
                                             ),
                                           ),
-                                        ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              stock.gasBottle.gasStation.name,
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Text(
-                                              stock.gasBottle.bottleCategory
-                                                  .weight,
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 15),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    '${stock.price} FCFA',
-                                                    textAlign: TextAlign.center,
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  const Icon(
-                                                    Icons.check_box,
-                                                    color: Colors.green,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(height: 40),
-                                            OutlinedButton(
-                                              onPressed: () {
-                                                _showOrderDialog(
-                                                  context,
+                                          // Contenu textuel et bouton
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
                                                   stock.gasBottle.gasStation
                                                       .name,
-                                                  stock.price,
-                                                  stock.gasBottle.id,
-                                                  'uhfuhfizuhfiuz',
-                                                  state.store?.id ?? '',
-                                                  'http://$IpGlobal:4000/api/${stock.gasBottle.image}',
-                                                );
-                                              },
-                                              style: OutlinedButton.styleFrom(
-                                                side: const BorderSide(
-                                                    color: Color.fromARGB(
-                                                        255, 255, 255, 255),
-                                                    width: 0.5),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
+                                              ),
+                                              Padding(
                                                 padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 30,
-                                                        vertical: 10),
-                                              ),
-                                              child: const Text(
-                                                'Commander',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  stock.gasBottle.bottleCategory
+                                                      .weight,
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  '${stock.price} FCFA',
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: OutlinedButton(
+                                                  onPressed: () {
+                                                    _showOrderDialog(
+                                                      context,
+                                                      stock.gasBottle.gasStation
+                                                          .name,
+                                                      stock.price,
+                                                      stock.gasBottle.id,
+                                                      'uhfuhfizuhfiuz',
+                                                      state.store?.id ?? '',
+                                                      'http://$IpGlobal:4000/api/${stock.gasBottle.image}',
+                                                    );
+                                                  },
+                                                  style:
+                                                      OutlinedButton.styleFrom(
+                                                    side: const BorderSide(
+                                                        color: Colors.white,
+                                                        width: 1),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 25,
+                                                        vertical: 10),
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                  ),
+                                                  child: const Text(
+                                                    'Acheter',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
@@ -285,7 +385,10 @@ void _showOrderDialog(
   String imageUrl,
 ) {
   final TextEditingController quantityController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
   String selectedPaymentMethod = 'Cash';
+  bool isDelivery = false;
   final List<String> paymentMethods = ['Cash', 'Credit Card', 'Mobile Money'];
 
   showDialog(
@@ -294,9 +397,17 @@ void _showOrderDialog(
       return BlocConsumer<OrdersBloc, OrdersState>(
         listener: (context, state) {
           if (state is CreateOrdersSuccess) {
-            Navigator.of(context).pop(); // Fermer le dialogue
+            Navigator.of(context).pop();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Commande effectuée avec succès !')),
+            );
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    PaymentPage(paymentUrl: state.payment!.paymentUrl),
+              ),
             );
           } else if (state is OrdersFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -306,6 +417,9 @@ void _showOrderDialog(
         },
         builder: (context, state) {
           return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             title: const Text(
               'Confirmation de commande',
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -320,19 +434,15 @@ void _showOrderDialog(
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  SizedBox(
-                    height: 200,
-                    width: double.infinity,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
                     child: InteractiveViewer(
                       boundaryMargin: const EdgeInsets.all(8.0),
                       minScale: 0.8,
                       maxScale: 4.0,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          imageUrl,
-                          fit: BoxFit.contain,
-                        ),
+                      child: Image.network(
+                        imageUrl,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
@@ -367,20 +477,69 @@ void _showOrderDialog(
                       );
                     }).toList(),
                   ),
+                  const SizedBox(height: 16),
+                  CheckboxListTile(
+                    title: const Text('Livraison à domicile'),
+                    value: isDelivery,
+                    onChanged: (bool? value) {
+                      isDelivery = value ?? false;
+                      (context as Element).markNeedsBuild(); // Rafraîchit l'UI
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                  if (isDelivery) ...[
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: addressController,
+                      decoration: const InputDecoration(
+                        labelText: 'Adresse de livraison',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.location_on),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: dateController,
+                      readOnly: true,
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+                        if (pickedDate != null) {
+                          dateController.text =
+                              "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                        }
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'Date de livraison',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.calendar_today),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
             actions: [
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
                 child: const Text(
                   'Annuler',
-                  style: TextStyle(color: Colors.red),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   final enteredQuantity = int.tryParse(quantityController.text);
                   if (enteredQuantity == null || enteredQuantity <= 0) {
@@ -392,7 +551,17 @@ void _showOrderDialog(
                     return;
                   }
 
-                  // Déclenchement de l'événement pour créer une commande
+                  if (isDelivery &&
+                      (addressController.text.isEmpty ||
+                          dateController.text.isEmpty)) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text(
+                              'Veuillez entrer l\'adresse et la date de livraison.')),
+                    );
+                    return;
+                  }
+
                   context.read<OrdersBloc>().add(CreateOrderEvent(
                         storeId: storeId,
                         gasBottle_id: gasBottle_id,
@@ -400,9 +569,15 @@ void _showOrderDialog(
                         aggregator_method_id: aggregator_method_id,
                       ));
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
                 child: const Text(
                   'Commander',
-                  style: TextStyle(color: Colors.green),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],

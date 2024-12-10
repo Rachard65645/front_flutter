@@ -3,6 +3,7 @@ class StoresModel {
   final String name;
   final String logo;
   final String city;
+  final String address;
   final List<Stock> stocks;
   final String pseudo;
   final Seller seller;
@@ -14,6 +15,7 @@ class StoresModel {
       required this.name,
       required this.logo,
       required this.city,
+      required this.address,
       required this.stocks,
       required this.pseudo,
       required this.seller,
@@ -26,6 +28,7 @@ class StoresModel {
       name: json['name'],
       logo: json['logo'],
       city: json['city'],
+      address: json['address'],
       stocks: (json['Stocks'] as List).map((i) => Stock.fromJson(i)).toList(),
       pseudo: json['pseudo'],
       seller: Seller.fromJson(json['sellers']),

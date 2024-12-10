@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gas/categories_screen.dart';
 import 'package:gas/nav_bar.dart';
+import 'package:gas/positions/business_logic/bloc/position_bloc.dart';
 import 'package:gas/router/app_router.gr.dart';
 import 'package:gas/service_locator.dart';
 import 'package:gas/vendor/store/business_logique/bloc/store_bloc.dart';
@@ -19,43 +20,81 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.deepOrangeAccent,
+        elevation: 1,
         title: const Text(
-          'HOME',
+          'Home',
           style: TextStyle(
-              color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                color: Color.fromARGB(206, 255, 98, 0),
-              ))
+            onPressed: () {
+              context.router.push(SearchStoresRoute());
+            },
+            icon: const Icon(Icons.search, color: Colors.white),
+          ),
         ],
       ),
       drawer: const NavBar(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Ajoutez vos catégories ici
-          CategoriesScreen(),
-          // BlocBuilder pour afficher les magasins
-          SizedBox(
-            height: 20,
-          ),
+          // Section des catégories
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              'The shops closest to you',
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            padding: const EdgeInsets.all(16.0),
+            child: BlocBuilder<PositionBloc, PositionState>(
+              builder: (context, state) {
+                if (state is PositionInitial) {
+                  getIt.get<PositionBloc>().add(GetPositionEvent());
+                }
+
+                if (state is PositionLoading) {
+                  return CircularProgressIndicator();
+                }
+
+                if (state is PositionSuccess) {
+                  return Row(
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        color: Colors.orange,
+                      ),
+                      Text(
+                        state.position!.city,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      )
+                    ],
+                  );
+                }
+
+                if (state is PositionFailure) {}
+                return Container();
+              },
             ),
           ),
-          SizedBox(
-            height: 14,
+          CategoriesScreen(),
+          const SizedBox(height: 20),
+          // Liste des magasins
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'Shops closest to you',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
           ),
+          const SizedBox(height: 10),
           Expanded(
             child: BlocBuilder<StoresBloc, StoresState>(
               builder: (context, state) {
@@ -65,25 +104,29 @@ class HomeScreen extends StatelessWidget {
 
                 if (state is Storesloading) {
                   return ListView.builder(
-                    itemCount: 10,
+                    itemCount: 6,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemBuilder: (context, index) {
                       return Shimmer.fromColors(
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 30.0,
-                            backgroundColor: Colors.grey[300],
-                          ),
-                          title: Container(
-                            width: double.infinity,
-                            height: 10.0,
-                            color: Colors.grey[300],
-                          ),
-                          subtitle: Container(
-                            width: 150,
-                            height: 10.0,
-                            color: Colors.grey[300],
+                        child: Card(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              radius: 30.0,
+                              backgroundColor: Colors.grey[300],
+                            ),
+                            title: Container(
+                              width: double.infinity,
+                              height: 10.0,
+                              color: Colors.grey[300],
+                            ),
+                            subtitle: Container(
+                              width: 150,
+                              height: 10.0,
+                              color: Colors.grey[300],
+                            ),
                           ),
                         ),
                       );
@@ -97,54 +140,86 @@ class HomeScreen extends StatelessWidget {
 
                 if (state is FetchStoreSuccess) {
                   return ListView.builder(
-                      itemCount: state.stores!.length,
-                      itemBuilder: (contex, index) {
-                        return ListTile(
+                    itemCount: state.stores!.length,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemBuilder: (context, index) {
+                      final store = state.stores![index];
+                      return Card(
+                        elevation: 3,
+                        margin: const EdgeInsets.only(bottom: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListTile(
                           leading: CircleAvatar(
                             radius: 30.0,
-                            backgroundColor: Color.fromARGB(206, 255, 98, 0),
                             backgroundImage: CachedNetworkImageProvider(
-                              'http://$IpGlobal:4000/api/${state.stores![index].logo}',
+                              'http://$IpGlobal:4000/api/${store.logo}',
                             ),
+                            backgroundColor:
+                                const Color.fromARGB(206, 255, 98, 0),
                           ),
                           title: Text(
-                            state.stores![index].name,
-                            style: const TextStyle(color: Colors.black),
+                            store.name,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
-                          subtitle: Text(
-                            state.stores![index].pseudo,
-                            style: const TextStyle(color: Colors.black),
+                          subtitle: Row(
+                            children: [
+                              Text(
+                                store.city,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              Text(
+                                store.address,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
                           trailing: Container(
-                            height: 20,
-                            width: 40,
+                            height: 25,
+                            width: 60,
                             decoration: BoxDecoration(
-                              color: state.stores![index].statusStore == "close"
-                                  ? Colors.red
-                                  : Color.fromARGB(82, 76, 175,
-                                      79), // Couleur rouge si le texte n'est pas "open"
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(5)),
+                              color: store.statusStore == "close"
+                                  ? Colors.redAccent
+                                  : Colors.greenAccent,
+                              borderRadius: BorderRadius.circular(5),
                             ),
                             child: Center(
                               child: Text(
-                                state.stores![index].statusStore,
+                                store.statusStore,
                                 style: const TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
                           ),
                           onTap: () {
-                            getIt.get<StoreBloc>().add(
-                                GetStoreByIdEven(id: state.stores![index].id));
-                            contex.router.push(const ShowStoreRoute());
+                            getIt
+                                .get<StoreBloc>()
+                                .add(GetStoreByIdEven(id: store.id));
+                            context.router.push(const ShowStoreRoute());
                           },
-                        );
-                      });
+                        ),
+                      );
+                    },
+                  );
                 }
-                return Container();
+
+                return const Center(child: Text("Something went wrong"));
               },
             ),
           ),

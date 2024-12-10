@@ -20,7 +20,7 @@ class GetStationsScreen extends StatelessWidget {
       body: BlocBuilder<StationsBloc, StationsState>(
         builder: (context, state) {
           if (state is StationsInitial) {
-            context.read<StationsBloc>().add(GetStationsEvent());
+            getIt.get<StationsBloc>().add(GetStationsEvent());
           }
 
           if (state is StationsLoading) {
@@ -120,6 +120,8 @@ class GetStationsScreen extends StatelessWidget {
           if (state is StationsFailure) {
             return Container();
           }
+
+          if (state.stations?.isEmpty ?? true) {}
           return Container();
         },
       ),

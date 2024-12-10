@@ -7,7 +7,7 @@ class PositionService {
 
 
   Future<dynamic> getPosition() async {
-    Response response = await http.get('https://ipinfo.io?token=064b094342bce7');
+    Response response = await http.get('/position');
     return response.data;
   }
 }

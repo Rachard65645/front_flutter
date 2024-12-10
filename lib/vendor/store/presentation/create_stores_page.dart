@@ -73,6 +73,7 @@ class _CreateStoresPageState extends State<CreateStoresPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: BlocConsumer<StoreBloc, StoreState>(
         listener: (context, state) {
           if (state is CreateStoreSuccess) {

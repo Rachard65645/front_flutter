@@ -3,15 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gas/auth/business_logic/login_bloc/login_bloc.dart';
 import 'package:gas/auth/business_logic/register_bloc/register_bloc.dart';
 import 'package:gas/gas_bottles/business_logic/bloc/gas_bottles_bloc.dart';
+import 'package:gas/order_users/business_logique/bloc/order_user_bloc.dart';
 import 'package:gas/orders/business_logique/bloc/orders_bloc.dart';
 import 'package:gas/positions/business_logic/bloc/position_bloc.dart';
 import 'package:gas/router/app_router.dart';
 import 'package:gas/service_locator.dart';
 import 'package:gas/station/business_logique/bloc/station_bloc.dart';
 import 'package:gas/stations/business_logique/bloc/stations_bloc.dart';
+import 'package:gas/vendor/search_store/business_logique/bloc/search_stores_bloc.dart';
 import 'package:gas/vendor/seller/business_logique/bloc/seller_bloc.dart';
 import 'package:gas/vendor/sellers/business_logique/bloc/sellers_bloc.dart';
 import 'package:gas/vendor/store/business_logique/bloc/store_bloc.dart';
+import 'package:gas/vendor/store_user/business_logique/bloc/store_user_bloc.dart';
 import 'package:gas/vendor/stores/business_logic/bloc/stores_bloc.dart';
 
 void main() {
@@ -54,11 +57,20 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => getIt.get<StoreBloc>(),
         ),
-         BlocProvider(
+        BlocProvider(
           create: (context) => getIt.get<GasBottlesBloc>(),
         ),
         BlocProvider(
           create: (context) => getIt.get<OrdersBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt.get<SearchStoresBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt.get<OrderUserBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt.get<StoreUserBloc>(),
         ),
       ],
       child: MaterialApp.router(

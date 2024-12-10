@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gas/order_users/business_logique/bloc/order_user_bloc.dart';
 import 'package:gas/router/app_router.gr.dart';
+import 'package:gas/service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NavBar extends StatelessWidget {
@@ -21,7 +23,7 @@ class NavBar extends StatelessWidget {
               radius: 40.0,
             ),
             decoration: const BoxDecoration(
-              color: Color.fromARGB(242, 255, 98, 0),
+              color: Colors.deepOrangeAccent,
             ),
           ),
           ListTile(
@@ -30,7 +32,9 @@ class NavBar extends StatelessWidget {
               color: Colors.orange,
             ),
             title: Text('Mes boutiques'),
-            onTap: () {},
+            onTap: () {
+              context.router.push(StoreGalleryRoute());
+            },
           ),
           ListTile(
             leading: Icon(
@@ -52,6 +56,17 @@ class NavBar extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(
+              Icons.shopping_cart_sharp,
+              color: Colors.orange,
+            ),
+            title: Text('order history'),
+            onTap: () {
+              getIt.get<OrderUserBloc>().add(FetchOrderUserEvent());
+              context.router.push(OrderHistoryRoute());
+            },
+          ),
+          ListTile(
+            leading: Icon(
               Icons.logout,
               color: Colors.orange,
             ),
@@ -63,7 +78,6 @@ class NavBar extends StatelessWidget {
     );
   }
 }
-
 
 Future<void> logout(BuildContext context) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

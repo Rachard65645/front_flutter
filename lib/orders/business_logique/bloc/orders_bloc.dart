@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:gas/orders/data/model/orders_model.dart';
 import 'package:gas/orders/data/reposetories/orders_reposetory.dart';
+import 'package:gas/payment/data/model/payment_model.dart';
 import 'package:meta/meta.dart';
 
 part 'orders_event.dart';
@@ -18,7 +18,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
             quantity: event.quantity ,
             aggregator_method_id: event.aggregator_method_id);
 
-        emit(CreateOrdersSuccess());
+        emit(CreateOrdersSuccess(payment: orders));
       } catch (err) {
         emit(OrdersFailure(message: err.toString()));
       }
